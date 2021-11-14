@@ -1,0 +1,63 @@
+html {
+    margin-left: 3em;
+    margin-right: 3em;
+    margin-top: 1.5em;
+    /* background-color: rgb(247, 248, 250); */
+}
+
+a {
+    color: black;
+}
+
+.is-primary {
+    background-color: #3e8ed0;
+    color: white;
+    border-top-right-radius: .2em;
+    border-top-left-radius: .2em;
+    margin-bottom: 0;
+    text-align: center;
+    font-size: 2em;
+}
+
+.panel-options {
+    width: 40%;
+    margin-right: 31%;
+    margin-left: 31%;
+    margin-top: .5em;
+}
+
+.option-list {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.option {
+    background-color: white;
+    padding: 0;
+}
+
+.option:hover {
+    cursor: pointer;
+    background-color:rgb(247, 248, 250);
+    filter: brightness(90%);
+}
+
+.home {
+    font-size: 1.5em;
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+#home-icon:hover {
+    background-color: inherit;
+    filter: brightness(150%);
+}
+
+.cook-time {
+    font-size: .6em;
+    text-align: right;
+}
+
+.menu-item {
+    text-align: left;
+}
