@@ -1,7 +1,7 @@
 const cookBook = [];
 const menu = [];
 const shoppingList = [];
-const inventory = [];
+// const inventory = [];
 
 // Recipe Class
 //      name (string) - Name of recipe
@@ -38,11 +38,9 @@ class Recipe {
     markCompleted
 };
 
-class ListItem {
-    constructor(item, amount, unit, addedStatus, id) {
+class shoppingListItem {
+    constructor(item, addedStatus, id) {
         this.item = item;
-        this.amount = amount;
-        this.unit = unit;
         this.addedStatus = addedStatus;
         this.id = id;
     };
@@ -59,53 +57,31 @@ class ListItem {
     markIncomplete() {
         this.addedStatus = false;
     };
-    addToInventory() {
-        inventory.push(this);
-    };
-    removeFromInventory() {
-        const index = inventory.map(inventoryItem => inventoryItem.id).indexOf(this.id);
-        inventory.splice(index, 1);
-    };
 }
 
 function createShoppingList() {
     const ingredientDictionary = createIngredientDictionary();
-    // console.log(ingredientDictionary)
     ingredientDictionary.forEach((dictionaryItem) => {
-        const inventoryIndex = inventory.map(inventoryItem => inventoryItem.item).indexOf(dictionaryItem.item);
         const shoppingListIndex = shoppingList.map(listItem => listItem.item).indexOf(dictionaryItem.item);
-        if (inventoryIndex === -1 && shoppingListIndex === -1) {
-            //Not in inventory or shopping list
-            shoppingList.push(new ListItem(dictionaryItem.item, dictionaryItem.amount, dictionaryItem.unit, false, uuidv4()));
-        } else if (inventoryIndex !== -1 && shoppingListIndex === -1 && inventory[inventoryIndex].amount < dictionaryItem.amount) {
-            //In Inventory but you need more, not in shopping list
-            shoppingList.push(new ListItem(dictionaryItem.item, dictionaryItem.amount - inventory[inventoryIndex].amount, dictionaryItem.unit, false, uuidv4()));
-        } else if (shoppingListIndex !== -1 && shoppingList[shoppingListIndex].amount < dictionaryItem.amount) {
-            //In shopping list but more is needed in shopping list
-            const newTotal = inventoryIndex !== -1 ? dictionaryItem.amount - inventory[inventoryIndex].amount : dictionaryItem.amount;
-            shoppingList[shoppingListIndex].amount = newTotal;
-        }
+        if (shoppingListIndex === -1) {
+            //Not in shopping list
+            shoppingList.push(new shoppingListItem(dictionaryItem.item, false, uuidv4()));
+        } 
     });
 };
 
 function createIngredientDictionary() {
     const ingredientDictionary = []
+    //Loop over menu items
     menu.forEach((menuItem) => {
+        //Loop over ingredients
         menuItem.ingredients.forEach((ingredient) => {
-            let amount = ingredient.amount.split(' ')[0]
-            if (amount.includes('/')) {
-                amount = parseInt(amount.split('/')[0])/parseInt(amount.split('/')[1])
-            }
+            //Don't duplicate ingredients
             if (!ingredientDictionary.map(dictionaryItem => dictionaryItem.item).includes(ingredient.item.toUpperCase())) {
                 ingredientDictionary.push({
-                    item: ingredient.item.toUpperCase(),
-                    amount: parseFloat(amount),
-                    unit: ingredient.unit
+                    item: ingredient.item.toUpperCase() //Does this need to be an object?
                 })
-            } else {
-                const index = ingredientDictionary.map(dictionaryItem => dictionaryItem.item).indexOf(ingredient.item.toUpperCase())
-                ingredientDictionary[index].amount += parseFloat(amount)
-            }
+            } 
         })
     })
     return ingredientDictionary
@@ -118,22 +94,6 @@ function clearMenu() {
 function clearShoppingList() {
     shoppingList.splice(0, shoppingList.length);
 };
-
-// Testing
-inventory.push({
-    item: 'CHICKEN',
-    amount: '10',
-    unit: 'OZ'
-},
-{
-    item: 'HAMBURGER MEAT',
-    amount: '1',
-    unit: "LB"
-},{
-    item: 'FLOUR',
-    amount: '1',
-    unit: 'CUP'
-})
 
 const testItem = new Recipe('Chicken Taos',
 [
